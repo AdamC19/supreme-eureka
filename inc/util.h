@@ -17,3 +17,5 @@ inline bool file_exists(const std::string& name){
 int parseInput(std::vector<std::string> &lines, std::ifstream& fin);
 
 std::vector<std::string> split(std::string src, char delim);
+
+std::vector<std::vector<int>> parseSplit(std::vector<std::string> &lines, std::ifstream& fin, char delim);
