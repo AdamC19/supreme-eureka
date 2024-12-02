@@ -40,3 +40,4 @@
 bin/
 build/
 .vscode/
+_ignore/
