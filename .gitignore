@@ -41,3 +41,4 @@ bin/
 build/
 .vscode/
 _ignore/
+venv/
