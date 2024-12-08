@@ -45,6 +45,26 @@ class Line {
 };
 
 
+std::vector<Line> linesFromCoords(std::vector<std::pair<int, int>>& coords) {
+    std::vector<Line> lines;
+    for (auto pt_it = coords.begin(); pt_it != coords.end(); pt_it++) {
+        std::pair<int, int> anchor = *pt_it; // copy our first point
+        // iterate over all other points, drawing lines between pt and each other point
+        for (auto pt = coords.begin(); pt != coords.end(); pt++) {
+            if (*pt != anchor) {
+                // the points are not the same, so see if we need to add a new line
+                Line line(anchor, *pt);
+                auto found = std::find(lines.begin(), lines.end(), line);
+                if (found == lines.end()) {
+                    lines.push_back(line);
+                }
+            }
+        }
+    }
+    return lines;
+}
+
+
 class Frequency {
     public:
 
@@ -53,6 +73,8 @@ class Frequency {
 
     // coordinates of the antinodes for this antenna. Populated by findAntinodes
     std::vector<std::pair<int, int>> antinodes; 
+    // coordinates of the harmonic antinodes for this antenna. Populated by findAntinodes
+    std::vector<std::pair<int, int>> ext_antinodes;
 
     char id;
 
@@ -75,31 +97,17 @@ class Frequency {
     }
 
     /**
-     * Find antinodes
+     * Find antinodes (PART 1)
      */
     std::vector<std::pair<int, int>> findAntinodes() {
 
         std::cout << "Freq " << id << ": Finding antinodes...\r\n";
         // first, create the lines between all antennas
-        std::vector<Line> lines;
+        std::vector<Line> lines = linesFromCoords(coords);
         
-        for (auto pt_it = coords.begin(); pt_it != coords.end(); pt_it++) {
-            std::pair<int, int> anchor = *pt_it; // copy our first point
-            // iterate over all other points, drawing lines between pt and each other point
-            for (auto pt = coords.begin(); pt != coords.end(); pt++) {
-                if (*pt != anchor) {
-                    // the points are not the same, so see if we need to add a new line
-                    Line line(anchor, *pt);
-                    auto found = std::find(lines.begin(), lines.end(), line);
-                    if (found == lines.end()) {
-                        lines.push_back(line);
-                    }
-                }
-            }
-        }
+        //std::cout << "  Drew " << lines.size() << " lines from " << coords.size() << " points.\r\n";
 
-        std::cout << "  Drew " << lines.size() << " lines from " << coords.size() << " points.\r\n";
-
+        // part 1 answer
         for (auto line = lines.begin(); line != lines.end(); ++line) {
             int delta_x = line->b.first - line->a.first;
             int delta_y = line->b.second - line->a.second;
@@ -118,9 +126,66 @@ class Frequency {
             if (found == antinodes.end())
                 antinodes.push_back(after);
         }
-        std::cout << "  Found " << antinodes.size() << " antinodes\r\n";
+        std::cout << "  Found " << antinodes.size() << " part 1 antinodes\r\n";
+        
+
         return antinodes;
     }
+
+    /**
+     * PART 2 antinode search
+     */
+    std::vector<std::pair<int, int>> findExtAntinodes(int max_x, int max_y) {
+        std::vector<Line> lines = linesFromCoords(coords);
+
+        for (auto line = lines.begin(); line != lines.end(); ++line) {
+            int x1 = line->a.first;
+            int x2 = line->b.first;
+            int y1 = line->a.second;
+            int y2 = line->b.second;
+            int delta_x = x2 - x1;
+            int delta_y = y2 - y1;
+
+            auto anode_1 = std::make_pair(x1, y1);
+            auto anode_2 = std::make_pair(x2, y2);
+            auto found = std::find(ext_antinodes.begin(), ext_antinodes.end(), anode_1);
+            if (found == ext_antinodes.end())
+                ext_antinodes.push_back(anode_1);
+            
+            found = std::find(ext_antinodes.begin(), ext_antinodes.end(), anode_2);
+            if (found == ext_antinodes.end())
+                ext_antinodes.push_back(anode_2);
+            
+            // draw antinodes "backwards" starting from (x1, y1)
+            int x = x1 - delta_x;
+            int y = y1 - delta_y;
+            while (x >= 0 && y >= 0) {
+                auto new_anode = std::make_pair(x, y);
+                auto existing = std::find(ext_antinodes.begin(), ext_antinodes.end(), new_anode);
+                if (existing == ext_antinodes.end())
+                    ext_antinodes.push_back(new_anode);
+
+                x -= delta_x;
+                y -= delta_y;
+            }
+
+            // draw antinodes "forwards" starting from (x2, y2)
+            x = x2 + delta_x;
+            y = y2 + delta_y;
+            while (x <= max_x && y <= max_y) {
+                auto new_anode = std::make_pair(x, y);
+                auto existing = std::find(ext_antinodes.begin(), ext_antinodes.end(), new_anode);
+                if (existing == ext_antinodes.end())
+                    ext_antinodes.push_back(new_anode);
+
+                x += delta_x;
+                y += delta_y;
+            }
+        }
+
+        return ext_antinodes;
+    }
+
 
 };
 
@@ -190,6 +255,7 @@ int main(int argc, char* argv[]){
     }
     og_map.push_back(row_tmp);
     anode_map.push_back(anode_row_tmp);
+    std::vector<std::vector<char>> anode_map_pt2 = anode_map;
 
     fin.close();
 
@@ -239,6 +305,27 @@ int main(int argc, char* argv[]){
     std::cout << "  COUNT OF ANTINODES: " << part1 << "\r\n";
     std::cout << "****************************************\r\n";
 
+    /* PART 2 */
+    std::cout << "**************** PART 2 ****************\r\n";
+    int part2 = 0;
+    for (auto freq_it = freqs.begin(); freq_it != freqs.end(); freq_it++) {
+        freq_it->second.findExtAntinodes(anode_map_pt2[0].size() - 1, anode_map_pt2.size() - 1);
+        plotAntinodes(anode_map_pt2, freq_it->second.ext_antinodes);
+    }
+    for (int i_row = 0; i_row < anode_map_pt2.size(); i_row++) {
+        for (int i_col = 0; i_col < anode_map_pt2[i_row].size(); i_col++) {
+            char c = anode_map_pt2[i_row][i_col];
+            if (c == '#') {
+                part2++;
+            }
+            std::cout << anode_map_pt2[i_row][i_col];
+        }
+        std::cout << "\r\n";
+    }
+    
+    std::cout << "  COUNT OF ANTINODES: " << part2 << "\r\n";
+    std::cout << "****************************************\r\n";
 
+    
     return 0;
 }
