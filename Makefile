@@ -38,6 +38,18 @@ BUILD_PATH_DAY11=build/day11
 
 SRC_PATH_DAY12=src_day12
 BUILD_PATH_DAY12=build/day12
+
+SRC_PATH_DAY13=src_day13
+BUILD_PATH_DAY13=build/day13
+
+SRC_PATH_DAY14=src_day14
+BUILD_PATH_DAY14=build/day14
+
+SRC_PATH_DAY15=src_day15
+BUILD_PATH_DAY15=build/day15
+
+SRC_PATH_DAY16=src_day16
+BUILD_PATH_DAY16=build/day16
 ##### END SRC PATHS #####
 
 BIN_PATH=bin
@@ -84,6 +96,18 @@ TARGET_DAY11:=$(BIN_PATH)/$(TARGET_DAY11_NAME)
 
 TARGET_DAY12_NAME=day12
 TARGET_DAY12:=$(BIN_PATH)/$(TARGET_DAY12_NAME)
+
+TARGET_DAY13_NAME=day13
+TARGET_DAY13:=$(BIN_PATH)/$(TARGET_DAY13_NAME)
+
+TARGET_DAY14_NAME=day14
+TARGET_DAY14:=$(BIN_PATH)/$(TARGET_DAY14_NAME)
+
+TARGET_DAY15_NAME=day15
+TARGET_DAY15:=$(BIN_PATH)/$(TARGET_DAY15_NAME)
+
+TARGET_DAY16_NAME=day16
+TARGET_DAY16:=$(BIN_PATH)/$(TARGET_DAY16_NAME)
 ##### END TARGET DEFS #####
 
 SRC_ALL:=$(foreach x, $(SRC_PATH_ALL), $(wildcard $(addprefix $(x)/*,.cpp)))
@@ -101,6 +125,10 @@ SRC_DAY9:=$(foreach x, $(SRC_PATH_DAY9), $(wildcard $(addprefix $(x)/*,.cpp)))
 SRC_DAY10:=$(foreach x, $(SRC_PATH_DAY10), $(wildcard $(addprefix $(x)/*,.cpp)))
 SRC_DAY11:=$(foreach x, $(SRC_PATH_DAY11), $(wildcard $(addprefix $(x)/*,.cpp)))
 SRC_DAY12:=$(foreach x, $(SRC_PATH_DAY12), $(wildcard $(addprefix $(x)/*,.cpp)))
+SRC_DAY13:=$(foreach x, $(SRC_PATH_DAY13), $(wildcard $(addprefix $(x)/*,.cpp)))
+SRC_DAY14:=$(foreach x, $(SRC_PATH_DAY14), $(wildcard $(addprefix $(x)/*,.cpp)))
+SRC_DAY15:=$(foreach x, $(SRC_PATH_DAY15), $(wildcard $(addprefix $(x)/*,.cpp)))
+SRC_DAY16:=$(foreach x, $(SRC_PATH_DAY16), $(wildcard $(addprefix $(x)/*,.cpp)))
 ##### END SRC LISTS #####
 
 OBJ_ALL:=$(addprefix $(BUILD_PATH_ALL)/, $(addsuffix .o, $(notdir $(basename $(SRC_ALL)))))
@@ -117,6 +145,10 @@ OBJ_DAY9:=$(addprefix $(BUILD_PATH_DAY9)/, $(addsuffix .o, $(notdir $(basename $
 OBJ_DAY10:=$(addprefix $(BUILD_PATH_DAY10)/, $(addsuffix .o, $(notdir $(basename $(SRC_DAY10)))))
 OBJ_DAY11:=$(addprefix $(BUILD_PATH_DAY11)/, $(addsuffix .o, $(notdir $(basename $(SRC_DAY11)))))
 OBJ_DAY12:=$(addprefix $(BUILD_PATH_DAY12)/, $(addsuffix .o, $(notdir $(basename $(SRC_DAY12)))))
+OBJ_DAY13:=$(addprefix $(BUILD_PATH_DAY13)/, $(addsuffix .o, $(notdir $(basename $(SRC_DAY13)))))
+OBJ_DAY14:=$(addprefix $(BUILD_PATH_DAY14)/, $(addsuffix .o, $(notdir $(basename $(SRC_DAY14)))))
+OBJ_DAY15:=$(addprefix $(BUILD_PATH_DAY15)/, $(addsuffix .o, $(notdir $(basename $(SRC_DAY15)))))
+OBJ_DAY16:=$(addprefix $(BUILD_PATH_DAY16)/, $(addsuffix .o, $(notdir $(basename $(SRC_DAY16)))))
 ##### END OBJ LISTS #####
 
 INC:=$(foreach x, $(INC_PATH), $(wildcard $(addprefix $(x)/*,.h)))
@@ -125,12 +157,14 @@ INC:=$(foreach x, $(INC_PATH), $(wildcard $(addprefix $(x)/*,.h)))
 DISTCLEAN_LIST= $(OBJ_ALL) \
 $(OBJ_DAY1) $(OBJ_DAY2) $(OBJ_DAY3) $(OBJ_DAY4) $(OBJ_DAY5) \
 $(OBJ_DAY6) $(OBJ_DAY7) $(OBJ_DAY8) $(OBJ_DAY9) $(OBJ_DAY10) \
-$(OBJ_DAY11) $(OBJ_DAY12) 
+$(OBJ_DAY11) $(OBJ_DAY12) $(OBJ_DAY13) $(OBJ_DAY14) $(OBJ_DAY15) \
+$(OBJ_DAY16)
 
 CLEAN_LIST= $(DISTCLEAN_LIST) \
 $(TARGET_DAY1) $(TARGET_DAY2) $(TARGET_DAY3) $(TARGET_DAY4) $(TARGET_DAY5) \
 $(TARGET_DAY6) $(TARGET_DAY7) $(TARGET_DAY8) $(TARGET_DAY9) $(TARGET_DAY10) \
-$(TARGET_DAY11) $(TARGET_DAY12)
+$(TARGET_DAY11) $(TARGET_DAY12) $(TARGET_DAY13) $(TARGET_DAY14) $(TARGET_DAY15) \
+$(TARGET_DAY16)
 
 #default rule
 default: makedir all
@@ -172,6 +206,18 @@ $(TARGET_DAY11): $(OBJ_DAY11) $(OBJ_ALL)
 
 $(TARGET_DAY12): $(OBJ_DAY12) $(OBJ_ALL)
 	$(CXX) $(CXXFLAGS) -I$(INC_PATH) -o $@ $(OBJ_DAY12) $(OBJ_ALL)
+
+$(TARGET_DAY13): $(OBJ_DAY13) $(OBJ_ALL)
+	$(CXX) $(CXXFLAGS) -I$(INC_PATH) -o $@ $(OBJ_DAY13) $(OBJ_ALL)
+
+$(TARGET_DAY14): $(OBJ_DAY14) $(OBJ_ALL)
+	$(CXX) $(CXXFLAGS) -I$(INC_PATH) -o $@ $(OBJ_DAY14) $(OBJ_ALL)
+
+$(TARGET_DAY15): $(OBJ_DAY15) $(OBJ_ALL)
+	$(CXX) $(CXXFLAGS) -I$(INC_PATH) -o $@ $(OBJ_DAY15) $(OBJ_ALL)
+
+$(TARGET_DAY16): $(OBJ_DAY16) $(OBJ_ALL)
+	$(CXX) $(CXXFLAGS) -I$(INC_PATH) -o $@ $(OBJ_DAY16) $(OBJ_ALL)
 ##### END TARGET RULES #####
 
 ##### BEGIN BUILD OBJECT RULES #####
@@ -213,19 +259,34 @@ $(BUILD_PATH_DAY11)/%.o: $(SRC_PATH_DAY11)/%.cpp
 
 $(BUILD_PATH_DAY12)/%.o: $(SRC_PATH_DAY12)/%.cpp
 	$(CXX) $(CXXOBJFLAGS) -I$(INC_PATH) -o $@ $<
+
+$(BUILD_PATH_DAY13)/%.o: $(SRC_PATH_DAY13)/%.cpp
+	$(CXX) $(CXXOBJFLAGS) -I$(INC_PATH) -o $@ $<
+
+$(BUILD_PATH_DAY14)/%.o: $(SRC_PATH_DAY14)/%.cpp
+	$(CXX) $(CXXOBJFLAGS) -I$(INC_PATH) -o $@ $<
+
+$(BUILD_PATH_DAY15)/%.o: $(SRC_PATH_DAY15)/%.cpp
+	$(CXX) $(CXXOBJFLAGS) -I$(INC_PATH) -o $@ $<
+
+$(BUILD_PATH_DAY16)/%.o: $(SRC_PATH_DAY16)/%.cpp
+	$(CXX) $(CXXOBJFLAGS) -I$(INC_PATH) -o $@ $<
 ##### END BUILD OBJECT RULES #####
 
 # phony rules
 .PHONY: makedir
 makedir:
-	@mkdir -p $(BIN_PATH) $(BUILD_PATH_ALL) $(BUILD_PATH_DAY1) $(BUILD_PATH_DAY2) $(BUILD_PATH_DAY3) $(BUILD_PATH_DAY4) $(BUILD_PATH_DAY5) \
+	@mkdir -p $(BIN_PATH) $(BUILD_PATH_ALL) \
+	$(BUILD_PATH_DAY1) $(BUILD_PATH_DAY2) $(BUILD_PATH_DAY3) $(BUILD_PATH_DAY4) $(BUILD_PATH_DAY5) \
 	$(BUILD_PATH_DAY6) $(BUILD_PATH_DAY7) $(BUILD_PATH_DAY8) $(BUILD_PATH_DAY9) $(BUILD_PATH_DAY10) \
-	$(BUILD_PATH_DAY11) $(BUILD_PATH_DAY12) 
+	$(BUILD_PATH_DAY11) $(BUILD_PATH_DAY12) $(BUILD_PATH_DAY13) $(BUILD_PATH_DAY14) $(BUILD_PATH_DAY15) \
+	$(BUILD_PATH_DAY16)
 
 .PHONY: all
-all: $(TARGET_DAY1) $(TARGET_DAY2) $(TARGET_DAY3) $(TARGET_DAY4) $(TARGET_DAY5) \
- $(TARGET_DAY6) $(TARGET_DAY7) $(TARGET_DAY8) $(TARGET_DAY9) $(TARGET_DAY10) \
- $(TARGET_DAY11) $(TARGET_DAY12)
+all: $(TARGET_DAY1)  $(TARGET_DAY2)  $(TARGET_DAY3)  $(TARGET_DAY4)  $(TARGET_DAY5) \
+     $(TARGET_DAY6)  $(TARGET_DAY7)  $(TARGET_DAY8)  $(TARGET_DAY9)  $(TARGET_DAY10) \
+     $(TARGET_DAY11) $(TARGET_DAY12) $(TARGET_DAY13) $(TARGET_DAY14) $(TARGET_DAY15) \
+	 $(TARGET_DAY16)
 
 .PHONY: clean
 clean:
